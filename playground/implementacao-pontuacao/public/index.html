@@ -145,6 +145,11 @@
                 // console.log(`Receiving ${command.type} -> ${command.fruitId}`)
                 game.removeFruit(command)
             })
+
+            socket.on('update-player-score', (command) => {
+                // console.log(`Receiving ${command.type} -> ${command.playerId}`)
+                game.state.players[command.playerId].score = command.score
+            })
         </script>
     </body>
 </html>

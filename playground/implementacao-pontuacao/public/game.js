@@ -134,6 +134,11 @@ export default function createGame() {
                 // console.log(`COLLISION between ${playerId} and ${fruitId}`)
                 removeFruit({ fruitId: fruitId })
                 player.score += 1
+                notifyAll({
+                    type: 'update-player-score',
+                    playerId: playerId,
+                    score: player.score
+                })
             }
         }
     }
