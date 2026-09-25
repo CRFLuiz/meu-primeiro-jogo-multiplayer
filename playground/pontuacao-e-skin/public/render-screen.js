@@ -10,6 +10,11 @@ export default function renderScreen(screen, scoreTable, game, requestAnimationF
     const { screen: { width, height, pixelsPerFields }} = game.state
     context.clearRect(0, 0, width*pixelsPerFields, height*pixelsPerFields)
 
+    if (game.state.isGameOver) {
+        updateScoreTable(scoreTable, game, currentPlayerId)
+        return
+    }
+
     for (const playerId in game.state.players) {
         const player = game.state.players[playerId]
         drawPlayer(context, player, game)

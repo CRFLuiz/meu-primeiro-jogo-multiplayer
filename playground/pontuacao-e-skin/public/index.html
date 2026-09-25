@@ -70,12 +70,46 @@
                 color: #bdaa27;
             }
 
+            #game-over-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0,0,0,0.75);
+                color: white;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                font-family: Arial, sans-serif;
+                z-index: 10;
+            }
+
+            #game-over-overlay.hidden {
+                display: none;
+            }
+
+            #winner-id {
+                color: #F0DB4F;
+                font-weight: bold;
+            }
+
+            #final-scores {
+                margin-top: 16px;
+                font-size: 14px;
+                opacity: 0.9;
+            }
+
         </style>
         <script src="/socket.io/socket.io.js"></script>
     </head>
     <body>
         <canvas id="screen" width="10" height="10"></canvas>
         <table id="score-table"></table>
+
+        <div id="game-over-overlay" class="hidden">
+            <h1>Fim de partida!</h1>
+            <p>Vencedor: <span id="winner-id"></span></p>
+            <p id="final-scores"></p>
+        </div>
 
         <script type="module">
             import createGame from './game.js'
@@ -130,9 +164,19 @@
 
                 const playerId = socket.id
 
+                if (game.state.isGameOver) return;
+
                 if (playerId !== command.playerId) {
                     game.movePlayer(command)
                 }
+            })
+
+            socket.on('game-over', (command) => {
+                const overlay = document.getElementById('game-over-overlay')
+                document.getElementById('winner-id').textContent = command.winnerPlayerId || 'Ninguém pontuou'
+                const lines = Object.entries(command.scores).sort(([,a],[,b]) => b - a).map(([id, s]) => `${id}: ${s}`)
+                document.getElementById('final-scores').textContent = lines.join('  •  ')
+                overlay.classList.remove('hidden')
             })
 
             socket.on('add-fruit', (command) => {

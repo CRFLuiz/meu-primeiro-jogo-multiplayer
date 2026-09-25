@@ -8,7 +8,9 @@ export default function createGame() {
             width: 25,
             height: 25,
             pixelsPerFields: 5,
-        }
+        },
+        isGameOver: false,
+        endTime: null
     }
 
     const observers = []
