@@ -1,0 +1,21 @@
+{
+  "name": "reconexao-automatica",
+  "version": "1.0.0",
+  "description": "Experiment with graceful reconnection: a player who drops from the Socket.io server is kept in state for a short grace window; reconnecting with the same sessionId restores the player's slot instead of creating a fresh one.",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch server.js",
+    "start": "node server.js",
+    "test": "node test/reconnection.test.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {
+    "socket.io-client": "^2.3.0"
+  }
+}
