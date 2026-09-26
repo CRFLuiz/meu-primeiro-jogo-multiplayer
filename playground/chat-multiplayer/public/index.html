@@ -1,0 +1,215 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Meu Primeiro Jogo Multiplayer — Chat</title>
+
+        <style>
+            #screen {
+                border: 10px solid #CCC;
+                image-rendering: pixelated;
+                image-rendering: crisp-edges;
+                image-rendering: -moz-crisp-edges;
+                width: 400px;
+                height: 400px;
+            }
+
+            #lobby-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.7);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10;
+            }
+
+            #lobby-overlay.hidden {
+                display: none;
+            }
+
+            #lobby-form {
+                background: #fff;
+                padding: 24px;
+                border: 1px solid #888;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                min-width: 240px;
+            }
+
+            #lobby-form label {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                font-family: sans-serif;
+                font-size: 14px;
+            }
+
+            #lobby-form input {
+                font-size: 14px;
+                padding: 4px 6px;
+            }
+
+            #lobby-form button {
+                font-size: 14px;
+                padding: 6px 12px;
+                cursor: pointer;
+            }
+
+            #game-stage {
+                display: flex;
+                gap: 16px;
+                align-items: flex-start;
+            }
+
+            #chat {
+                border: 1px solid #888;
+                padding: 8px;
+                width: 240px;
+                font-family: sans-serif;
+                font-size: 14px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            #chat-log {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                max-height: 240px;
+                overflow-y: auto;
+                border: 1px solid #ccc;
+                padding: 4px;
+            }
+
+            #chat-form {
+                display: flex;
+                gap: 4px;
+            }
+
+            #chat-form input {
+                flex: 1;
+                font-size: 14px;
+                padding: 4px 6px;
+            }
+
+            #chat-form button {
+                font-size: 14px;
+                padding: 4px 8px;
+                cursor: pointer;
+            }
+        </style>
+        <script src="/socket.io/socket.io.js"></script>
+    </head>
+    <body>
+        <div id="lobby-overlay">
+            <form id="lobby-form">
+                <label>
+                    Room
+                    <input id="room-input" type="text" autocomplete="off" required>
+                </label>
+                <label>
+                    Player name
+                    <input id="player-name-input" type="text" autocomplete="off" required>
+                </label>
+                <button type="submit">Enter</button>
+            </form>
+        </div>
+
+        <div id="game-stage">
+            <canvas id="screen" width="10" height="10"></canvas>
+
+            <section id="chat">
+                <ul id="chat-log"></ul>
+                <form id="chat-form">
+                    <input id="chat-input" type="text" maxlength="200" autocomplete="off">
+                    <button type="submit">Enviar</button>
+                </form>
+            </section>
+        </div>
+
+        <script type="module">
+            import createGame from './game.js'
+            import createKeyboardListener from './keyboard-listener.js'
+            import renderScreen from './render-screen.js'
+            import createChat from './chat.js'
+
+            const lobbyOverlay = document.getElementById('lobby-overlay')
+            const lobbyForm = document.getElementById('lobby-form')
+            const roomInput = document.getElementById('room-input')
+            const playerNameInput = document.getElementById('player-name-input')
+
+            const game = createGame()
+            const keyboardListener = createKeyboardListener(document)
+
+            let socket = null
+
+            lobbyForm.addEventListener('submit', (event) => {
+                event.preventDefault()
+
+                const room = roomInput.value.trim()
+                const playerName = playerNameInput.value.trim()
+
+                if (!room || !playerName) {
+                    return
+                }
+
+                lobbyOverlay.classList.add('hidden')
+
+                socket = io({ query: { room, userName: playerName } })
+
+                createChat(socket)
+
+                socket.on('connect', () => {
+                    const playerId = socket.id
+                    console.log(`Player connected on Client with id: ${playerId}`)
+
+                    const screen = document.getElementById('screen')
+                    renderScreen(screen, game, requestAnimationFrame, playerId)
+                })
+
+                socket.on('setup', (state) => {
+                    const playerId = socket.id
+                    game.setState(state)
+
+                    keyboardListener.registerPlayerId(playerId)
+                    keyboardListener.subscribe(game.movePlayer)
+                    keyboardListener.subscribe((command) => {
+                        socket.emit('move-player', command)
+                    })
+                })
+
+                socket.on('add-player', (command) => {
+                    console.log(`Receiving ${command.type} -> ${command.playerId}`)
+                    game.addPlayer(command)
+                })
+
+                socket.on('remove-player', (command) => {
+                    console.log(`Receiving ${command.type} -> ${command.playerId}`)
+                    game.removePlayer(command)
+                })
+
+                socket.on('move-player', (command) => {
+                    console.log(`Receiving ${command.type} -> ${command.playerId}`)
+
+                    const playerId = socket.id
+
+                    if (playerId !== command.playerId) {
+                        game.movePlayer(command)
+                    }
+                })
+
+                socket.on('add-fruit', (command) => {
+                    console.log(`Receiving ${command.type} -> ${command.fruitId}`)
+                    game.addFruit(command)
+                })
+
+                socket.on('remove-fruit', (command) => {
+                    console.log(`Receiving ${command.type} -> ${command.fruitId}`)
+                    game.removeFruit(command)
+                })
+            })
+        </script>
+    </body>
+</html>
