@@ -77,6 +77,33 @@
                 console.log(`Receiving ${command.type} -> ${command.fruitId}`)
                 game.removeFruit(command)
             })
+
+            socket.on('add-power-up', (command) => {
+                console.log(`Receiving ${command.type} -> ${command.powerUpId}`)
+                game.addPowerUp(command)
+            })
+
+            socket.on('remove-power-up', (command) => {
+                console.log(`Receiving ${command.type} -> ${command.powerUpId}`)
+                game.removePowerUp(command)
+            })
+
+            socket.on('boost-player', (command) => {
+                console.log(`Receiving ${command.type} -> ${command.playerId}`)
+                // Server emits `boost-player` with only `{ playerId }` (no powerUpId),
+                // so the shared `pickupPowerUp` (which expects powerUpId for collision-driven
+                // pickup) would early-return as a no-op on the client. Mirror the boost
+                // directly into local state instead, using a fresh expiry so the renderer
+                // can paint the boosted color until the matching `unboost-player` clears it.
+                game.state.playerBoosts[command.playerId] = {
+                    expiresAt: Date.now() + 6000
+                }
+            })
+
+            socket.on('unboost-player', (command) => {
+                console.log(`Receiving ${command.type} -> ${command.playerId}`)
+                game.removeSpeedBoost(command)
+            })
         </script>
     </body>
 </html>
