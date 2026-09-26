@@ -5,8 +5,15 @@ export default function renderScreen(screen, game, requestAnimationFrame, curren
 
     for (const playerId in game.state.players) {
         const player = game.state.players[playerId]
-        context.fillStyle = 'black'
+        const isBoosted = !!game.state.playerBoosts[playerId]
+        context.fillStyle = isBoosted ? '#FF4136' : 'black'
         context.fillRect(player.x, player.y, 1, 1)
+    }
+
+    for (const powerUpId in game.state.powerUps) {
+        const powerUp = game.state.powerUps[powerUpId]
+        context.fillStyle = '#3D9970'
+        context.fillRect(powerUp.x, powerUp.y, 1, 1)
     }
 
     for (const fruitId in game.state.fruits) {
@@ -17,7 +24,7 @@ export default function renderScreen(screen, game, requestAnimationFrame, curren
 
     const currentPlayer = game.state.players[currentPlayerId]
 
-    if(currentPlayer) {
+    if(currentPlayer && !game.state.playerBoosts[currentPlayerId]) {
         context.fillStyle = '#F0DB4F'
         context.fillRect(currentPlayer.x, currentPlayer.y, 1, 1)
     }
