@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Página inicial do repositório meu-primeiro-jogo-multiplayer — lista dos experimentos multiplayer disponíveis em /playground/.">
+  <title>meu-primeiro-jogo-multiplayer — Experimentos</title>
+  <style>
+    :root {
+      --bg: #0f1115;
+      --surface: #1a1d24;
+      --surface-hover: #22262f;
+      --border: #2c313c;
+      --text: #e6e8ec;
+      --muted: #9aa1ad;
+      --accent: #4f9cf9;
+      --accent-text: #0b1118;
+      --focus: #ffd54a;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      color-scheme: dark;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: clamp(1.25rem, 3vw, 2.5rem);
+    }
+
+    header.page-header {
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-size: clamp(1.5rem, 2.6vw, 2rem);
+      margin: 0 0 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    .intro {
+      color: var(--muted);
+      max-width: 65ch;
+      margin: 0 0 0.5rem;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin: 0;
+    }
+
+    .hint code {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.1rem 0.4rem;
+      font-size: 0.9em;
+      color: var(--text);
+    }
+
+    main {
+      display: block;
+    }
+
+    .grid {
+      list-style: none;
+      margin: 1.5rem 0 0;
+      padding: 0;
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 700px) {
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1000px) {
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      color: var(--text);
+      text-decoration: none;
+      transition: background 120ms ease, border-color 120ms ease, transform 120ms ease;
+    }
+
+    .card:hover {
+      background: var(--surface-hover);
+      border-color: #3a4150;
+    }
+
+    .card-label {
+      font-weight: 600;
+      font-size: 1.02rem;
+    }
+
+    .card-arrow {
+      color: var(--accent);
+      font-size: 1.2rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .card:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    footer {
+      margin-top: 2.5rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="page-header">
+      <h1>Experimentos Multiplayer</h1>
+      <p class="intro">
+        Este repositório reúne experimentos de jogos multiplayer, cada um mantido em sua própria pasta dentro de <code>/playground/&lt;name&gt;/</code>. Esta página lista todos os experimentos disponíveis para você abrir diretamente, sem precisar decorar o caminho de cada um.
+      </p>
+      <p class="hint">
+        Para rodar um jogo localmente: <code>cd playground/&lt;name&gt; &amp;&amp; npm install &amp;&amp; npm start</code>.
+      </p>
+    </header>
+
+    <main>
+      <nav aria-label="Lista de experimentos multiplayer">
+        <ul class="grid" role="list">
+          <li><a class="card" href="playground/1st-proof-of-concept/"><span class="card-label">Prova de Conceito (POC)</span><span class="card-arrow" aria-hidden="true">→</span></a></li>
+          <li><a class="card" href="playground/1st-release/"><span class="card-label">Minimum Viable Product (MVP)</span><span class="card-arrow" aria-hidden="true">→</span></a></li>
+          <li><a class="card" href="playground/chess/"><span class="card-label">Versão Xadrez</span><span class="card-arrow" aria-hidden="true">→</span></a></li>
+          <li><a class="card" href="playground/implementacao-pontuacao/"><span class="card-label">Implementação com Score</span><span class="card-arrow" aria-hidden="true">→</span></a></li>
+          <li><a class="card" href="playground/implementacao-snake/"><span class="card-label">Estilo Jogo da Cobrinha</span><span class="card-arrow" aria-hidden="true">→</span></a></li>
+          <li><a class="card" href="playground/implementacao-teleporte/"><span class="card-label">Teleporte do Jogador no limite do Canvas</span><span class="card-arrow" aria-hidden="true">→</span></a></li>
+          <li><a class="card" href="playground/player-collision-novos-pots/"><span class="card-label">Colidindo com players, novos skins e som</span><span class="card-arrow" aria-hidden="true">→</span></a></li>
+          <li><a class="card" href="playground/pontuacao-e-skin/"><span class="card-label">Skin para Jogadores e Frutas</span><span class="card-arrow" aria-hidden="true">→</span></a></li>
+          <li><a class="card" href="playground/pwa-pod/"><span class="card-label">Simples PWA</span><span class="card-arrow" aria-hidden="true">→</span></a></li>
+        </ul>
+      </nav>
+    </main>
+
+    <footer>
+      Repositório aberto a contribuições — adicione sua própria versão em uma nova pasta dentro de <code>playground/</code>.
+    </footer>
+  </div>
+</body>
+</html>
