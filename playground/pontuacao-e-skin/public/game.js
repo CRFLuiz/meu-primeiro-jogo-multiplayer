@@ -135,6 +135,7 @@ export default function createGame() {
                 // console.log(`COLLISION between ${playerId} and ${fruitId}`)
                 removeFruit({ fruitId: fruitId })
                 player.score += 1
+                player.reactOnUntil = Date.now() + 500
             }
         }
     }

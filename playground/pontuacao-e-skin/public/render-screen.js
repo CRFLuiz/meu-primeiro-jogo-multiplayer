@@ -42,6 +42,8 @@ function drawPlayer(screenContext, player, game, isCurrentPlayer = false) {
         eyeAndMouthColors = 'white'
     }
 
+    const isReacting = Date.now() < (player.reactOnUntil ?? 0)
+
     let { x, y } = player
     x *= pixelsPerFields
     y *= pixelsPerFields
@@ -50,11 +52,19 @@ function drawPlayer(screenContext, player, game, isCurrentPlayer = false) {
     screenContext.fillStyle = faceColor
     screenContext.fillRect(x, y, pixelsPerFields, pixelsPerFields)
 
-    // Draw eyes and mouth
+    // Draw eyes and mouth (happy variant while a score reaction window is open)
     screenContext.fillStyle = eyeAndMouthColors
-    screenContext.fillRect(x+1,y+1,1,1)
-    screenContext.fillRect(x+3,y+1,1,1)
-    screenContext.fillRect(x+1,y+3,3,1)
+    if (isReacting) {
+        screenContext.fillRect(x+1,y+1,2,1)
+        screenContext.fillRect(x+3,y+1,2,1)
+        screenContext.fillRect(x+1,y+4,1,1)
+        screenContext.fillRect(x+2,y+3,1,1)
+        screenContext.fillRect(x+3,y+4,1,1)
+    } else {
+        screenContext.fillRect(x+1,y+1,1,1)
+        screenContext.fillRect(x+3,y+1,1,1)
+        screenContext.fillRect(x+1,y+3,3,1)
+    }
 }
 
 function drawFruit(screenContext, fruit, game) {
